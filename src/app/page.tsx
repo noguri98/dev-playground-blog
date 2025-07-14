@@ -1,4 +1,5 @@
 import Profile from "@/components/profile";
+import DateTime from "@/components/datetime";
 import Monthly from "@/components/monthly";
 
 export default function HomePage() {
@@ -33,6 +34,7 @@ export default function HomePage() {
         {/* left_pnl*/}
         <div className='flex items-center flex-col border-1 border-gray-300 rounded-[20px] gap-[30px] px-2 pb-4' style={{ width: '220px', minHeight: '500px', height: '100%'}}>
           <Profile />
+          <DateTime />
           <Monthly />
         </div>
         
