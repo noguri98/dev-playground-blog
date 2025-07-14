@@ -1,3 +1,12 @@
+/*
+    profile.tsx의 util function 패키지
+
+    1. ProfileRender: profile img 렌더링
+    2. ProfileShow: profile img viewer
+    3. ProfileTool: profile img menu
+    4. ProfileUpdate: profile img update
+    5. ProfileDelete: profile img delete
+*/
 "use client";
 
 import { useState, useEffect } from 'react';

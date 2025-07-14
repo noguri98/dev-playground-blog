@@ -105,10 +105,9 @@ export default function Profile() {
                 />
             )}
           </div>
-            {/* user info 보여주기 */}
+            {/* user info 렌더링*/}
             <span className="text-left text-xl ml-[3px]"> {userInfo?.user} </span>
             <span className="text-left text-sm ml-[3px]"> {userInfo?.info?.message} </span>
-
         </div>
     )
 }
