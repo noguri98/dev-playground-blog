@@ -1,6 +1,9 @@
 {
+  "name": "노규민",
   "user": "noguri",
+  "message": "꾸준히 성장하는 개발자 noguri입니다.",
   "info": {
-    "message": "반갑습니다. noguri입니다."
+    "nation": "대한민국",
+    "city": "경북 구미시"
   }
 }

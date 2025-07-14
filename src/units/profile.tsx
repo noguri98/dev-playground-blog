@@ -1,43 +1,18 @@
 "use client";
 
 import { ProfileRender, ProfileShow, ProfileTool, ProfileUpdate, ProfileDelete } from "@/utils/funProfile";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-export default function Profile() {
+export default function Profile({ jsonData }: { jsonData: any }) {
     const [showViewer, setShowViewer] = useState(false);
     const [showTooltip, setShowTooltip] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
     const [selectedImagePath, setSelectedImagePath] = useState('');
-    const [profile, setProfile] = useState<any>(null);
-    const [userInfo, setUserInfo] = useState<any>(null);
-
-    // JSON 데이터 가져오기
-    const getProfile = async () => {
-        try {
-            const response = await fetch("/data/profile.json");
-            if (!response.ok) {
-                throw new Error('Failed to fetch profile data');
-            }
-            const data = await response.json();
-            
-            // noguri 회원인지 확인
-            if (data.user === 'noguri') {
-                setUserInfo(data);
-                setProfile(data.profile);
-            } else {
-                console.error('User not found or not noguri');
-            }
-        } catch (error) {
-            console.error("Error loading profile data:", error);
-        }
-    };
-
-    useEffect(() => {
-        getProfile();
-    }, []);
-
+    const [profile, setProfile] = useState<any>(jsonData.profile);
+    const [userInfo, setUserInfo] = useState<any>(jsonData);
+    
     const handleImageClick = (imagePath: string) => {
         setSelectedImagePath(imagePath);
         setShowViewer(true);
@@ -61,10 +36,10 @@ export default function Profile() {
     };
 
     const handleProfileUpdate = () => {
-        // 프로필 데이터를 다시 로드
-        getProfile();
+        // 프로필 업데이트 후 페이지 새로고침
+        window.location.reload();
     };
-
+    
     return (
         <div className="flex flex-col px-4 " style={{ width: '100%', height: 'auto'}}>      
           <div className="flex justify-center items-center" style={{ width: '100%', height: 'auto'}}>
@@ -106,8 +81,8 @@ export default function Profile() {
             )}
           </div>
             {/* user info 렌더링*/}
-            <span className="text-left text-xl ml-[3px]"> {userInfo?.user} </span>
-            <span className="text-left text-sm ml-[3px]"> {userInfo?.info?.message} </span>
+            <span className="text-left text-xl ml-[3px]"> {jsonData?.user} </span>
+            <span className="text-left text-sm ml-[3px]"> {jsonData?.message} </span>
         </div>
     )
 }

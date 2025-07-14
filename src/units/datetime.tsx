@@ -18,31 +18,34 @@ interface WeatherData {
     name: string;
 }
 
-export default function DateTime() {
-    const [currentDate, setCurrentDate] = useState(new Date());
+interface DateTimeInfo {
+    date: string;
+    time: string;
+    full: string;
+    timezone: string;
+    location: string;
+}
+
+interface Info {
+    nation: string;
+    city: string;
+}
+
+export default function DateTime({ dateTimeInfo, info }: { dateTimeInfo: DateTimeInfo; info: Info }) {
     const [weather, setWeather] = useState<WeatherData | null>(null);
     const [loading, setLoading] = useState(true);
-
-    // 실시간 시간 업데이트
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentDate(new Date());
-        }, 1000);
-
-        return () => clearInterval(timer);
-    }, []);
 
     // 날씨 정보 가져오기 (무료 API 사용)
     useEffect(() => {
         const fetchWeather = async () => {
             try {
-                // 구미시의 위도/경도 (대략적인 위치)
-                const lat = 36.1194;
-                const lon = 128.3446;
+                // info 정보를 사용하여 동적으로 도시 설정
+                const cityName = info.city.replace(/^경북\s*/, ''); // "경북 구미시" -> "구미시"
+                const searchCity = cityName.includes('시') ? cityName : `${cityName}시`;
                 
                 // 무료 날씨 API 사용 (wttr.in)
                 const response = await fetch(
-                    `https://wttr.in/Gumi?format=j1`
+                    `https://wttr.in/${searchCity}?format=j1`
                 );
                 
                 if (response.ok) {
@@ -60,7 +63,7 @@ export default function DateTime() {
                             description: current.weatherDesc[0].value,
                             icon: current.weatherIconUrl[0].value
                         }],
-                        name: '구미'
+                        name: cityName
                     };
                     
                     setWeather(weatherData);
@@ -68,6 +71,7 @@ export default function DateTime() {
             } catch (error) {
                 console.error('날씨 정보를 가져오는데 실패했습니다:', error);
                 // 더미 데이터로 대체
+                const cityName = info.city.replace(/^경북\s*/, '');
                 const dummyWeather: WeatherData = {
                     main: {
                         temp: 22,
@@ -79,7 +83,7 @@ export default function DateTime() {
                         description: '맑음',
                         icon: '01d'
                     }],
-                    name: '구미시'
+                    name: cityName
                 };
                 setWeather(dummyWeather);
             } finally {
@@ -93,12 +97,7 @@ export default function DateTime() {
         const weatherTimer = setInterval(fetchWeather, 30 * 60 * 1000);
         
         return () => clearInterval(weatherTimer);
-    }, []);
-
-    // 날씨 아이콘 URL 생성
-    const getWeatherIconUrl = (iconCode: string) => {
-        return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-    };
+    }, [info.city]); // info.city가 변경될 때마다 날씨 정보 다시 가져오기
 
     // 날씨 상태에 따른 이모지 반환
     const getWeatherEmoji = (weatherMain: string) => {
@@ -119,16 +118,19 @@ export default function DateTime() {
         <div className='flex flex-col border-1 border-gray-300 rounded-[20px] p-3 gap-2' style={{ width: '100%', height: '150px'}}>            
           <div className='flex flex-col justify-start items-start'>
             <span className='text-sm font-medium text-gray-800'>
-                {format(currentDate, 'yyyy.MM.dd (E)', { locale: ko })}
+                {dateTimeInfo.date} ({dateTimeInfo.timezone})
             </span>
             <span className='text-l font-bold text-gray-800'>
-                {format(currentDate, 'HH:mm:ss')}
+                {dateTimeInfo.time}
+            </span>
+            <span className='text-xs text-gray-600'>
+                {dateTimeInfo.location}
             </span>
           </div>
 
           <div className='flex flex-col justify-start items-start'>
           <div className='flex flex-row justify-start items-center gap-2'>
-            <span className='text-sm font-semibold text-gray-800'>구미</span>
+            <span className='text-sm font-semibold text-gray-800'>{info.city}</span>
               {loading ? (
                 <div className='text-xs text-gray-500'>날씨 로딩중...</div>
               ) : weather ? (
