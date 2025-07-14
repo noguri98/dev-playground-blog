@@ -31,9 +31,9 @@ export default function HomePage() {
       {/* 하단 화면 */}
       <div className='flex border-t-2 border-b-2 border-gray-300 py-4 gap-[10px]' style={{ width: '80vw', minHeight: '800px', height: 'auto'}}>
         {/* left_pnl*/}
-        <button className='flex items-center flex-col border-1 border-gray-300 rounded-[20px] gap-[10px]' style={{ width: '220px', minHeight: '500px', height: '100%'}}>
+        <div className='flex items-center flex-col border-1 border-gray-300 rounded-[20px] gap-[10px]' style={{ width: '220px', minHeight: '500px', height: '100%'}}>
           <Profile />
-        </button>
+        </div>
         
         {/* 본문 컨테이너*/}
         <div className='flex flex-col justify-end' style={{ width: '80%', height: '100%'}}>

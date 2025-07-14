@@ -15,7 +15,7 @@ export function ProfileRender({
 }) {
     // noguri 회원이 아니거나 프로필 데이터가 없는 경우 기본 이미지 사용
     const imagePath = userInfo && userInfo.user === 'noguri' && profile && Object.keys(profile).length > 0 
-        ? `/image/profile/${profile.image || 'profile.png'}`
+        ? `/image/user/noguri/${profile.image || 'profile.png'}`
         : '/image/profile/profile.png';
 
     const handleImageClick = () => {
@@ -127,9 +127,13 @@ export function ProfileShow({ imagePath, onClose }: { imagePath: string; onClose
     );
 }
 
-export function ProfileTool({ position, onClose }: { position: { x: number; y: number }; onClose: () => void }) {
+export function ProfileTool({ position, onClose, onEdit }: { 
+    position: { x: number; y: number }; 
+    onClose: () => void;
+    onEdit: () => void;
+}) {
     const menuItems = [
-        { id: 'edit', label: '프로필 수정', action: () => console.log('프로필 수정') },
+        { id: 'edit', label: '프로필 수정', action: onEdit },
         { id: 'delete', label: '프로필 삭제', action: () => console.log('프로필 삭제') }
     ];
 
@@ -202,6 +206,233 @@ export function ProfileTool({ position, onClose }: { position: { x: number; y: n
     );
 }
 
-export function ProfileEdit() {
-    
+export function ProfileUpdate({ onClose, onUpdate }: { onClose: () => void; onUpdate: () => void }) {
+    const [isUploading, setIsUploading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+
+        document.addEventListener('keydown', handleEscape);
+        document.body.style.overflow = 'hidden';
+
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+            document.body.style.overflow = 'unset';
+        };
+    }, [onClose]);
+
+    const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // 파일 타입 검증
+        if (!file.type.startsWith('image/')) {
+            setError('이미지 파일만 선택할 수 있습니다.');
+            return;
+        }
+
+        // 파일 크기 검증 (5MB 제한)
+        if (file.size > 5 * 1024 * 1024) {
+            setError('파일 크기는 5MB 이하여야 합니다.');
+            return;
+        }
+
+        setIsUploading(true);
+        setError(null);
+
+        try {
+            // 파일을 FormData로 전송
+            const formData = new FormData();
+            formData.append('image', file);
+
+            const response = await fetch('/api/upload-profile', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('이미지 업로드에 실패했습니다.');
+            }
+
+            const result = await response.json();
+            
+            // profile.json 업데이트
+            const updateResponse = await fetch('/api/update-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    image: result.filename
+                }),
+            });
+
+            if (!updateResponse.ok) {
+                throw new Error('프로필 업데이트에 실패했습니다.');
+            }
+
+            onUpdate(); // 부모 컴포넌트에 업데이트 알림
+            onClose();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const handleClickOutside = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget) {
+            onClose();
+        }
+    };
+
+    return (
+        <div 
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 1000,
+                cursor: 'pointer'
+            }}
+            onClick={handleClickOutside}
+        >
+            <div 
+                style={{
+                    backgroundColor: 'white',
+                    borderRadius: '12px',
+                    padding: '24px',
+                    maxWidth: '400px',
+                    width: '90%',
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+                }}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div style={{ marginBottom: '20px' }}>
+                    <h2 style={{ 
+                        fontSize: '20px', 
+                        fontWeight: '600', 
+                        marginBottom: '8px',
+                        color: '#1f2937'
+                    }}>
+                        프로필 이미지 수정
+                    </h2>
+                    <p style={{ 
+                        fontSize: '14px', 
+                        color: '#6b7280',
+                        margin: 0
+                    }}>
+                        새로운 프로필 이미지를 선택해주세요.
+                    </p>
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                    <label 
+                        htmlFor="profile-image-input"
+                        style={{
+                            display: 'block',
+                            width: '100%',
+                            padding: '12px 16px',
+                            border: '2px dashed #d1d5db',
+                            borderRadius: '8px',
+                            textAlign: 'center',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            backgroundColor: '#f9fafb'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = '#3b82f6';
+                            e.currentTarget.style.backgroundColor = '#eff6ff';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = '#d1d5db';
+                            e.currentTarget.style.backgroundColor = '#f9fafb';
+                        }}
+                    >
+                        <div style={{ fontSize: '16px', color: '#374151', marginBottom: '4px' }}>
+                            📁 이미지 선택
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                            JPG, PNG, GIF (최대 5MB)
+                        </div>
+                    </label>
+                    <input
+                        id="profile-image-input"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileSelect}
+                        style={{ display: 'none' }}
+                        disabled={isUploading}
+                    />
+                </div>
+
+                {error && (
+                    <div style={{
+                        padding: '12px',
+                        backgroundColor: '#fef2f2',
+                        border: '1px solid #fecaca',
+                        borderRadius: '6px',
+                        marginBottom: '16px'
+                    }}>
+                        <p style={{ 
+                            color: '#dc2626', 
+                            fontSize: '14px', 
+                            margin: 0 
+                        }}>
+                            {error}
+                        </p>
+                    </div>
+                )}
+
+                {isUploading && (
+                    <div style={{
+                        padding: '12px',
+                        backgroundColor: '#eff6ff',
+                        border: '1px solid #bfdbfe',
+                        borderRadius: '6px',
+                        marginBottom: '16px',
+                        textAlign: 'center'
+                    }}>
+                        <p style={{ 
+                            color: '#1d4ed8', 
+                            fontSize: '14px', 
+                            margin: 0 
+                        }}>
+                            이미지를 업로드하고 있습니다...
+                        </p>
+                    </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                    <button
+                        onClick={onClose}
+                        disabled={isUploading}
+                        style={{
+                            padding: '8px 16px',
+                            border: '1px solid #d1d5db',
+                            borderRadius: '6px',
+                            backgroundColor: 'white',
+                            color: '#374151',
+                            cursor: isUploading ? 'not-allowed' : 'pointer',
+                            fontSize: '14px',
+                            opacity: isUploading ? 0.5 : 1
+                        }}
+                    >
+                        취소
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
 }
