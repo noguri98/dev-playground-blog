@@ -1,4 +1,5 @@
 import Profile from "@/components/profile";
+import Monthly from "@/components/monthly";
 
 export default function HomePage() {
   return (
@@ -30,12 +31,13 @@ export default function HomePage() {
       {/* display*/}
       <div className='flex border-t-2 border-b-2 border-gray-300 py-4 gap-[10px]' style={{ width: '80vw', minHeight: '800px', height: 'auto'}}>
         {/* left_pnl*/}
-        <div className='flex items-center flex-col border-1 border-gray-300 rounded-[20px] gap-[10px]' style={{ width: '220px', minHeight: '500px', height: '100%'}}>
+        <div className='flex items-center flex-col border-1 border-gray-300 rounded-[20px] gap-[30px] px-2 pb-4' style={{ width: '220px', minHeight: '500px', height: '100%'}}>
           <Profile />
+          <Monthly />
         </div>
         
         {/* body_pnl */}
-        <div className='flex flex-col justify-end' style={{ width: '80%', height: '100%'}}>
+        <div className='flex flex-col justify-end' style={{ width: '', height: '100%'}}>
           
         </div>
       </div>
