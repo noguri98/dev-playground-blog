@@ -1,12 +1,13 @@
 "use client";
 
-import { ProfileRender, ProfileShow, ProfileTool, ProfileUpdate } from "@/utils/funProfile";
+import { ProfileRender, ProfileShow, ProfileTool, ProfileUpdate, ProfileDelete } from "@/utils/funProfile";
 import { useState, useEffect } from "react";
 
 export default function Profile() {
     const [showViewer, setShowViewer] = useState(false);
     const [showTooltip, setShowTooltip] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
     const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
     const [selectedImagePath, setSelectedImagePath] = useState('');
     const [profile, setProfile] = useState<any>(null);
@@ -54,6 +55,11 @@ export default function Profile() {
         setShowTooltip(false);
     };
 
+    const handleDelete = () => {
+        setShowDelete(true);
+        setShowTooltip(false);
+    };
+
     const handleProfileUpdate = () => {
         // 프로필 데이터를 다시 로드
         getProfile();
@@ -81,12 +87,20 @@ export default function Profile() {
                     position={tooltipPosition}
                     onClose={() => setShowTooltip(false)}
                     onEdit={handleEdit}
+                    onDelete={handleDelete}
                 />
             )}
             
             {showEdit && (
                 <ProfileUpdate 
                     onClose={() => setShowEdit(false)}
+                    onUpdate={handleProfileUpdate}
+                />
+            )}
+            
+            {showDelete && (
+                <ProfileDelete 
+                    onClose={() => setShowDelete(false)}
                     onUpdate={handleProfileUpdate}
                 />
             )}

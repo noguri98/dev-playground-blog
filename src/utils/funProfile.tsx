@@ -127,14 +127,15 @@ export function ProfileShow({ imagePath, onClose }: { imagePath: string; onClose
     );
 }
 
-export function ProfileTool({ position, onClose, onEdit }: { 
+export function ProfileTool({ position, onClose, onEdit, onDelete }: { 
     position: { x: number; y: number }; 
     onClose: () => void;
     onEdit: () => void;
+    onDelete: () => void;
 }) {
     const menuItems = [
         { id: 'edit', label: '프로필 수정', action: onEdit },
-        { id: 'delete', label: '프로필 삭제', action: () => console.log('프로필 삭제') }
+        { id: 'delete', label: '프로필 삭제', action: onDelete }
     ];
 
     useEffect(() => {
@@ -430,6 +431,180 @@ export function ProfileUpdate({ onClose, onUpdate }: { onClose: () => void; onUp
                         }}
                     >
                         취소
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export function ProfileDelete({ onClose, onUpdate }: { onClose: () => void; onUpdate: () => void }) {
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+
+        document.addEventListener('keydown', handleEscape);
+        document.body.style.overflow = 'hidden';
+
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+            document.body.style.overflow = 'unset';
+        };
+    }, [onClose]);
+
+    const handleDelete = async () => {
+        setIsDeleting(true);
+        setError(null);
+
+        try {
+            const response = await fetch('/api/delete-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('프로필 삭제에 실패했습니다.');
+            }
+
+            onUpdate(); // 부모 컴포넌트에 업데이트 알림
+            onClose();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleClickOutside = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget) {
+            onClose();
+        }
+    };
+
+    return (
+        <div 
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 1000,
+                cursor: 'pointer'
+            }}
+            onClick={handleClickOutside}
+        >
+            <div 
+                style={{
+                    backgroundColor: 'white',
+                    borderRadius: '12px',
+                    padding: '24px',
+                    maxWidth: '400px',
+                    width: '90%',
+                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+                }}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div style={{ marginBottom: '20px' }}>
+                    <h2 style={{ 
+                        fontSize: '20px', 
+                        fontWeight: '600', 
+                        marginBottom: '8px',
+                        color: '#dc2626'
+                    }}>
+                        ⚠️ 프로필 삭제
+                    </h2>
+                    <p style={{ 
+                        fontSize: '14px', 
+                        color: '#6b7280',
+                        margin: 0
+                    }}>
+                        프로필 정보를 삭제하시겠습니까?<br/>
+                        이미지 파일은 그대로 유지됩니다.
+                    </p>
+                </div>
+
+                {error && (
+                    <div style={{
+                        padding: '12px',
+                        backgroundColor: '#fef2f2',
+                        border: '1px solid #fecaca',
+                        borderRadius: '6px',
+                        marginBottom: '16px'
+                    }}>
+                        <p style={{ 
+                            color: '#dc2626', 
+                            fontSize: '14px', 
+                            margin: 0 
+                        }}>
+                            {error}
+                        </p>
+                    </div>
+                )}
+
+                {isDeleting && (
+                    <div style={{
+                        padding: '12px',
+                        backgroundColor: '#eff6ff',
+                        border: '1px solid #bfdbfe',
+                        borderRadius: '6px',
+                        marginBottom: '16px',
+                        textAlign: 'center'
+                    }}>
+                        <p style={{ 
+                            color: '#1d4ed8', 
+                            fontSize: '14px', 
+                            margin: 0 
+                        }}>
+                            프로필을 삭제하고 있습니다...
+                        </p>
+                    </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                    <button
+                        onClick={onClose}
+                        disabled={isDeleting}
+                        style={{
+                            padding: '8px 16px',
+                            border: '1px solid #d1d5db',
+                            borderRadius: '6px',
+                            backgroundColor: 'white',
+                            color: '#374151',
+                            cursor: isDeleting ? 'not-allowed' : 'pointer',
+                            fontSize: '14px',
+                            opacity: isDeleting ? 0.5 : 1
+                        }}
+                    >
+                        취소
+                    </button>
+                    <button
+                        onClick={handleDelete}
+                        disabled={isDeleting}
+                        style={{
+                            padding: '8px 16px',
+                            border: 'none',
+                            borderRadius: '6px',
+                            backgroundColor: '#dc2626',
+                            color: 'white',
+                            cursor: isDeleting ? 'not-allowed' : 'pointer',
+                            fontSize: '14px',
+                            opacity: isDeleting ? 0.5 : 1
+                        }}
+                    >
+                        삭제
                     </button>
                 </div>
             </div>
