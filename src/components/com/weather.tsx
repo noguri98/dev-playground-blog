@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { format } from "date-fns";
-import { ko } from "date-fns/locale";
 
 interface WeatherData {
     main: {
@@ -18,20 +16,16 @@ interface WeatherData {
     name: string;
 }
 
-interface DateTimeInfo {
-    date: string;
-    time: string;
-    full: string;
-    timezone: string;
-    location: string;
-}
-
 interface Info {
     nation: string;
     city: string;
 }
 
-export default function DateTime({ dateTimeInfo, info }: { dateTimeInfo: DateTimeInfo; info: Info }) {
+interface Props {
+    info: Info;
+}
+
+export default function Weather({ info }: Props) {
     const [weather, setWeather] = useState<WeatherData | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -50,23 +44,29 @@ export default function DateTime({ dateTimeInfo, info }: { dateTimeInfo: DateTim
                 
                 if (response.ok) {
                     const data = await response.json();
-                    const current = data.current_condition[0];
+                    const current = data.current_condition?.[0];
                     
-                    const weatherData: WeatherData = {
-                        main: {
-                            temp: parseFloat(current.temp_C),
-                            humidity: parseInt(current.humidity),
-                            feels_like: parseFloat(current.FeelsLikeC)
-                        },
-                        weather: [{
-                            main: current.weatherDesc[0].value,
-                            description: current.weatherDesc[0].value,
-                            icon: current.weatherIconUrl[0].value
-                        }],
-                        name: cityName
-                    };
-                    
-                    setWeather(weatherData);
+                    if (current) {
+                        const weatherData: WeatherData = {
+                            main: {
+                                temp: parseFloat(current.temp_C) || 0,
+                                humidity: parseInt(current.humidity) || 0,
+                                feels_like: parseFloat(current.FeelsLikeC) || 0
+                            },
+                            weather: [{
+                                main: current.weatherDesc?.[0]?.value || 'Unknown',
+                                description: current.weatherDesc?.[0]?.value || 'Unknown',
+                                icon: current.weatherIconUrl?.[0]?.value || ''
+                            }],
+                            name: cityName
+                        };
+                        
+                        setWeather(weatherData);
+                    } else {
+                        throw new Error('날씨 데이터가 올바르지 않습니다.');
+                    }
+                } else {
+                    throw new Error(`API 응답 오류: ${response.status}`);
                 }
             } catch (error) {
                 console.error('날씨 정보를 가져오는데 실패했습니다:', error);
@@ -100,7 +100,7 @@ export default function DateTime({ dateTimeInfo, info }: { dateTimeInfo: DateTim
     }, [info.city]); // info.city가 변경될 때마다 날씨 정보 다시 가져오기
 
     // 날씨 상태에 따른 이모지 반환
-    const getWeatherEmoji = (weatherMain: string) => {
+    const getWeatherEmoji = (weatherMain: string): string => {
         switch (weatherMain.toLowerCase()) {
             case 'clear': return '☀️';
             case 'clouds': return '☁️';
@@ -115,34 +115,21 @@ export default function DateTime({ dateTimeInfo, info }: { dateTimeInfo: DateTim
     };
 
     return (
-        <div className='flex flex-col border-1 border-gray-300 rounded-[20px] p-3 gap-2' style={{ width: '100%', height: '150px'}}>            
-          <div className='flex flex-col justify-start items-start'>
-            <span className='text-sm font-medium text-gray-800'>
-                {dateTimeInfo.date} ({dateTimeInfo.timezone})
-            </span>
-            <span className='text-l font-bold text-gray-800'>
-                {dateTimeInfo.time}
-            </span>
-            <span className='text-xs text-gray-600'>
-                {dateTimeInfo.location}
-            </span>
-          </div>
-
-          <div className='flex flex-col justify-start items-start'>
-          <div className='flex flex-row justify-start items-center gap-2'>
-            <span className='text-sm font-semibold text-gray-800'>{info.city}</span>
-              {loading ? (
-                <div className='text-xs text-gray-500'>날씨 로딩중...</div>
-              ) : weather ? (
-                <div className='flex items-center gap-1'>
-                  <span className='text-lg'>{getWeatherEmoji(weather.weather[0].main)}</span>
-                  <span className='text-xs text-gray-600'>{Math.round(weather.main.temp)}°C</span>
-                </div>
-              ) : (
-                <div className='text-xs text-gray-500'>날씨 정보 없음</div>
-              )}
-        </div>
-        {weather && (
+        <div className='flex flex-col justify-start items-start'>
+            <div className='flex flex-row justify-start items-center gap-2'>
+                <span className='text-sm font-semibold text-gray-800'>{info.city}</span>
+                {loading ? (
+                    <div className='text-xs text-gray-500'>날씨 로딩중...</div>
+                ) : weather ? (
+                    <div className='flex items-center gap-1'>
+                        <span className='text-lg'>{getWeatherEmoji(weather.weather[0].main)}</span>
+                        <span className='text-xs text-gray-600'>{Math.round(weather.main.temp)}°C</span>
+                    </div>
+                ) : (
+                    <div className='text-xs text-gray-500'>날씨 정보 없음</div>
+                )}
+            </div>
+            {weather && (
                 <div className='flex flex-col justify-start items-start gap-0.5'>
                     <div className='text-xs text-gray-600'>
                         습도: {weather.main.humidity}%
@@ -153,6 +140,5 @@ export default function DateTime({ dateTimeInfo, info }: { dateTimeInfo: DateTim
                 </div>
             )}
         </div>
-        </div>
-    )
+    );
 }

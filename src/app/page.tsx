@@ -1,9 +1,14 @@
-import Profile from "@/components/com/leftpnl_profile";
-import DateTime from "@/components/com/leftpnl_datetime";
-import Monthly from "@/components/com/leftpnl_monthly";
+import { getJsonData } from "@/utils/funHomepage";
+
+import DateTime from "@/components/com/datetime";
+import Weather from "@/components/com/weather";
+
 import LeftPnl from "@/components/modules/leftpnl";
 
 export default function HomePage() {
+
+  const jsonData = getJsonData();
+
   return (
     <main className='flex flex-col items-center px-4 py-1 gap-[100px]' style={{ width: '100vw', height: 'auto' }}>
       {/* top_menu_bar: 추후 component로 분리 예정*/}
@@ -31,9 +36,21 @@ export default function HomePage() {
       </div>
 
       {/* display*/}
-      <div className='flex border-t-2 border-b-2 border-gray-300 py-4 gap-[10px]' style={{ width: '80vw', minHeight: '800px', height: 'auto'}}>
-        {/* left_pnl*/}
-        <LeftPnl />
+      <div className='flex flex-col pb-4' style={{ width: '80vw'}}>
+        <div className='flex justify-between' style={{ width: '100%', height: '30px'}}>
+          <div className='flex border-1 border-gray-300' style={{ width: '250px', height: '100%'}}> {/* border는 제거할 것! */}
+
+          </div>
+          {/* datetime과 weather : weather은 animation으로 전환되면서 보여지기 */}
+          <div className='flex flex-row justify-start items-center' style={{ width: '270px', height: '100%'}}> {/* border는 제거할 것! */}
+            <DateTime info={jsonData.info} />
+          </div>
+        </div>
+        <div className='flex border-t-2 border-b-2 border-gray-300 py-4' style={{ width: '100%', minHeight: '830px', height: 'auto'}}>
+          {/* left_pnl*/}
+          <LeftPnl />
+        </div>
+
 
         
         {/* body_pnl */}

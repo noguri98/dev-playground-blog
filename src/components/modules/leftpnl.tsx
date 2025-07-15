@@ -1,14 +1,11 @@
 "use client";
 
-import { getJsonData } from "@/utils/funLeftpnl";
-import { useDateTimeUpdate } from "@/hooks/useLeftpnl";
-
 import Profile from "@/components/com/leftpnl_profile";
-import DateTime from "@/components/com/leftpnl_datetime";
+import DateTime from "@/components/com/datetime";
 import Monthly from "@/components/com/leftpnl_monthly";
 
 export default function LeftPnl() {
-    const jsonData = getJsonData();
+    
     /*
         jsonData 형식
         {
@@ -22,16 +19,12 @@ export default function LeftPnl() {
         }
     */
 
-    // 커스텀 훅을 사용하여 시간 정보 관리
-    const { dateTimeInfo } = useDateTimeUpdate({
-        nation: jsonData.info.nation,
-        city: jsonData.info.city
-    });
+
 
     return (
         <div className='flex items-center flex-col border-1 border-gray-300 rounded-[20px] gap-[30px] px-2 pb-4' style={{ width: '250px', minHeight: '500px', height: '100%'}}>
-            <Profile jsonData={jsonData}/>
-            <DateTime dateTimeInfo={dateTimeInfo} info={jsonData.info}/>
+            {/* <Profile />
+            <DateTime/> */}
             <Monthly />
         </div>
     )
