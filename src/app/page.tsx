@@ -1,9 +1,9 @@
 import { getJsonData } from "@/utils/funHomepage";
 
-import DateTime from "@/components/com/datetime";
-import MenuBar from "@/components/com/menubar";
+import DateTime from "@/components/datetime";
+import MenuBar from "@/components/menubar";
 
-import LeftPnl from "@/components/modules/leftpnl";
+import LeftPnl from "@/components/leftpnl";
 
 export default function HomePage() {
 

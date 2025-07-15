@@ -1,8 +1,8 @@
 "use client";
 
-import Profile from "@/components/com/leftpnl_profile";
-import DateTime from "@/components/com/datetime";
-import Monthly from "@/components/com/leftpnl_monthly";
+import Profile from "@/components/leftpnl_profile";
+import DateTime from "@/components/datetime";
+import Monthly from "@/components/leftpnl_monthly";
 
 export default function LeftPnl() {
     
