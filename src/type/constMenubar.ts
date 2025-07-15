@@ -6,18 +6,23 @@ export interface MenuItem {
 
 export const menuItems = [
     {
+        id: 'home',
+        label: '홈',
+        path: '/'
+    },
+    {
         id: 'prologue',
         label: '프롤로그',
-        path: '/prologue'
+        path: '/menu/prologue'
     },
     {
         id: 'timeline',
         label: '타임라인',
-        path: '/timeline'
+        path: '/menu/timeline'
     },
     {
         id: 'posts',
         label: '게시글',
-        path: '/posts'
+        path: '/menu/posts'
     }
 ];
