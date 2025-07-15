@@ -1,7 +1,7 @@
-import Profile from "@/units/profile";
-import DateTime from "@/units/datetime";
-import Monthly from "@/units/monthly";
-import LeftPnl from "@/components/leftpnl";
+import Profile from "@/components/com/leftpnl_profile";
+import DateTime from "@/components/com/leftpnl_datetime";
+import Monthly from "@/components/com/leftpnl_monthly";
+import LeftPnl from "@/components/modules/leftpnl";
 
 export default function HomePage() {
   return (
