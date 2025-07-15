@@ -3,7 +3,11 @@
 import { ProfileRender, ProfileShow, ProfileTool, ProfileUpdate, ProfileDelete } from "@/utils/funProfile";
 import { useState } from "react";
 
-export default function Profile({ jsonData }: { jsonData: any }) {
+interface ProfileProps {
+    jsonData: any;
+}
+
+export default function Profile({ jsonData }: ProfileProps) {
     const [showViewer, setShowViewer] = useState(false);
     const [showTooltip, setShowTooltip] = useState(false);
     const [showEdit, setShowEdit] = useState(false);

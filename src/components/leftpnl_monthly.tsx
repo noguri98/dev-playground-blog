@@ -45,22 +45,22 @@ export default function Monthly() {
     const emptyDays = Array.from({ length: firstDayOfWeek }, (_, i) => i);
 
     return (
-        <div className='flex p-0.5' style={{ width: '100%', height: '140px'}}>
+        <div className='flex p-0.5' style={{ width: '100%', height: '170px'}}>
             <div className="w-full h-full flex flex-col">
                 {/* 헤더 - 월 표시 및 네비게이션 */}
                 <div className="flex justify-between items-center mb-0.5 px-1 py-0.5">
                     <button 
                         onClick={prevMonth}
-                        className="text-gray-500 hover:text-gray-700 text-xs"
+                        className="text-gray-500 hover:text-gray-700 text-l"
                     >
                         ‹
                     </button>
-                    <span className="text-xs font-medium text-gray-800">
+                    <span className="text-sm font-medium text-gray-800">
                         {format(currentDate, 'yyyy년 MM월', { locale: ko })}
                     </span>
                     <button 
                         onClick={nextMonth}
-                        className="text-gray-500 hover:text-gray-700 text-xs"
+                        className="text-gray-500 hover:text-gray-700 text-l"
                     >
                         ›
                     </button>
@@ -96,7 +96,7 @@ export default function Monthly() {
                             className={`py-0 text-center text-xs font-medium cursor-pointer rounded hover:bg-gray-100 ${
                                 getDayColorClass(date)
                             } ${
-                                isToday(date) ? 'bg-yellow-200 font-bold' : ''
+                                isToday(date) ? 'font-bold text-black' : ''
                             }`}
                         >
                             {format(date, 'd')}

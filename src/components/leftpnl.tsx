@@ -4,7 +4,11 @@ import Profile from "@/components/leftpnl_profile";
 import DateTime from "@/components/datetime";
 import Monthly from "@/components/leftpnl_monthly";
 
-export default function LeftPnl() {
+interface LeftPnlProps {
+    jsonData: any;
+}
+
+export default function LeftPnl({ jsonData }: LeftPnlProps) {
     
     /*
         jsonData 형식
@@ -23,8 +27,8 @@ export default function LeftPnl() {
 
     return (
         <div className='flex items-center flex-col border-1 border-gray-300 rounded-[20px] gap-[30px] px-2 pb-4' style={{ width: '250px', minHeight: '500px', height: '100%'}}>
-            {/* <Profile /> */}
-            {/* <Monthly /> */}
+            <Profile jsonData={jsonData} />
+            <Monthly />
         </div>
     )
 }

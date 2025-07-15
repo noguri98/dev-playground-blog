@@ -30,26 +30,23 @@ export default function HomePage() {
             <span className='text-center text-gray-300'>|</span>
           </div>
         </div>
-        
-
-        
       </div>
 
       {/* display*/}
       <div className='flex flex-col pb-4' style={{ width: '80vw'}}>
-        <div className='flex justify-between' style={{ width: '100%', height: '30px'}}>
+        <div className='flex justify-between px-1' style={{ width: '100%', height: '30px'}}>
           {/* menu-bar*/}
-          <div className='flex flex-row justify-start items-center' style={{ minWidth: '270px', width: 'auto', height: '100%'}}> {/* border는 제거할 것! */}
+          <div className='flex flex-row justify-start items-center' style={{ minWidth: '270px', width: 'auto', height: '100%'}}>
             <MenuBar />
           </div>
           {/* datetime과 weather : weather은 animation으로 전환되면서 보여지기 */}
-          <div className='flex flex-row justify-start items-center' style={{ width: '270px', height: '100%'}}> {/* border는 제거할 것! */}
+          <div className='flex flex-row justify-start items-center' style={{ width: '270px', height: '100%'}}>
             <DateTime info={jsonData.info} />
           </div>
         </div>
         <div className='flex border-t-2 border-b-2 border-gray-300 py-4' style={{ width: '100%', minHeight: '830px', height: 'auto'}}>
           {/* left_pnl*/}
-          <LeftPnl />
+          <LeftPnl jsonData={jsonData} />
         </div>
 
 
