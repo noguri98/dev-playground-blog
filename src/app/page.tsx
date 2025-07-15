@@ -1,7 +1,7 @@
 import { getJsonData } from "@/utils/funHomepage";
 
 import DateTime from "@/components/com/datetime";
-import Weather from "@/components/com/weather";
+import MenuBar from "@/components/com/menubar";
 
 import LeftPnl from "@/components/modules/leftpnl";
 
@@ -24,7 +24,7 @@ export default function HomePage() {
             <span className='text-center text-gray-300'>|</span>
           </div>
           <button className='flex justify-center items-center px-2 py-1 ' style={{ width: '100%', height: '100%'}}>
-            <span className='text-gray-400' style={{ whiteSpace: 'nowrap'}}>time-line</span>
+            <span className='text-gray-400' style={{ whiteSpace: 'nowrap'}}>setting</span>
           </button>
           <div className='flex justify-center items-center' style={{ width: '1px', height: '100%'}}>
             <span className='text-center text-gray-300'>|</span>
@@ -38,8 +38,9 @@ export default function HomePage() {
       {/* display*/}
       <div className='flex flex-col pb-4' style={{ width: '80vw'}}>
         <div className='flex justify-between' style={{ width: '100%', height: '30px'}}>
-          <div className='flex border-1 border-gray-300' style={{ width: '250px', height: '100%'}}> {/* border는 제거할 것! */}
-
+          {/* menu-bar*/}
+          <div className='flex flex-row justify-start items-center' style={{ minWidth: '270px', width: 'auto', height: '100%'}}> {/* border는 제거할 것! */}
+            <MenuBar />
           </div>
           {/* datetime과 weather : weather은 animation으로 전환되면서 보여지기 */}
           <div className='flex flex-row justify-start items-center' style={{ width: '270px', height: '100%'}}> {/* border는 제거할 것! */}

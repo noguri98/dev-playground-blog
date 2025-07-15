@@ -17,9 +17,9 @@ export default function DateTime({ info }: { info: Info }) {
 
     return (
         <div className='flex items-center py-2 gap-[20px]' style={{ width: '100%', height: '100%'}}>
-          <span className='text-sm text-gray-500'>{dateTimeInfo.date} </span>
-          <span className='text-sm text-gray-500'>{dateTimeInfo.time}</span>
-          <span className='text-sm text-gray-500'>{dateTimeInfo.timezone}</span>
+          <span className='text-sm text-gray-400'>{dateTimeInfo.date} </span>
+          <span className='text-sm text-gray-400'>{dateTimeInfo.time}</span>
+          <span className='text-sm text-gray-400'>{dateTimeInfo.timezone}</span>
         </div>
     );
 }

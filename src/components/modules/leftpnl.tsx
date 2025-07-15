@@ -23,9 +23,8 @@ export default function LeftPnl() {
 
     return (
         <div className='flex items-center flex-col border-1 border-gray-300 rounded-[20px] gap-[30px] px-2 pb-4' style={{ width: '250px', minHeight: '500px', height: '100%'}}>
-            {/* <Profile />
-            <DateTime/> */}
-            <Monthly />
+            {/* <Profile /> */}
+            {/* <Monthly /> */}
         </div>
     )
 }
