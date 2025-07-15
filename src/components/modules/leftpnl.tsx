@@ -1,11 +1,11 @@
 "use client";
 
-import { getJsonData, getDateTime } from "@/lib/libleftpnl";
+import { getJsonData, getDateTime } from "@/utils/funLeftpnl";
 import { useState, useEffect } from "react";
 
-import Profile from "@/units/profile";
-import DateTime from "@/units/datetime";
-import Monthly from "@/units/monthly";
+import Profile from "@/components/com/leftpnl_profile";
+import DateTime from "@/components/com/leftpnl_datetime";
+import Monthly from "@/components/com/leftpnl_monthly";
 
 export default function LeftPnl() {
     const jsonData = getJsonData();

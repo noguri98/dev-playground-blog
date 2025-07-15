@@ -6,7 +6,7 @@
 */
 
 import profile from "../../public/data/profile.json";
-import { timezoneMap, cityTimezoneMap } from "../type/timezoneMaps";
+import { timezoneMap, cityTimezoneMap } from "../type/constDatetime";
 
 export function getJsonData() {
     return profile;
