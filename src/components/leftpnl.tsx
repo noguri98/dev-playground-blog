@@ -1,8 +1,8 @@
 "use client";
 
-import Profile from "@/components/com/leftpnl_profile";
-import DateTime from "@/components/com/datetime";
-import Monthly from "@/components/com/leftpnl_monthly";
+import Profile from "@/components/leftpnl_profile";
+import DateTime from "@/components/datetime";
+import Monthly from "@/components/leftpnl_monthly";
 
 export default function LeftPnl() {
     
@@ -23,9 +23,8 @@ export default function LeftPnl() {
 
     return (
         <div className='flex items-center flex-col border-1 border-gray-300 rounded-[20px] gap-[30px] px-2 pb-4' style={{ width: '250px', minHeight: '500px', height: '100%'}}>
-            {/* <Profile />
-            <DateTime/> */}
-            <Monthly />
+            {/* <Profile /> */}
+            {/* <Monthly /> */}
         </div>
     )
 }
