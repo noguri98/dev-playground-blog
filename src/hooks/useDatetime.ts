@@ -7,12 +7,15 @@ interface UseDatetimeUpdateProps {
 }
 
 export function useDateTimeUpdate({ nation, city }: UseDatetimeUpdateProps) {
-    // 시간 정보를 state로 관리
-    const [dateTimeInfo, setDateTimeInfo] = useState(() => 
-        getDateTime(nation, city)
-    );
+    // 시간 정보를 state로 관리 (초기값은 null로 설정)
+    const [dateTimeInfo, setDateTimeInfo] = useState<any>(null);
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        // 클라이언트에서만 실행
+        setIsClient(true);
+        setDateTimeInfo(getDateTime(nation, city));
+        
         const timer = setInterval(() => {
             setDateTimeInfo(getDateTime(nation, city));
         }, 1000); // 1초마다 시간 업데이트
@@ -22,6 +25,7 @@ export function useDateTimeUpdate({ nation, city }: UseDatetimeUpdateProps) {
     }, [nation, city]);
 
     return {
-        dateTimeInfo
+        dateTimeInfo: isClient ? dateTimeInfo : null,
+        isClient
     };
 }

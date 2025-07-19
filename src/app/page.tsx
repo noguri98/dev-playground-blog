@@ -44,7 +44,7 @@ export default function HomePage() {
             <DateTime info={jsonData.info} />
           </div>
         </div>
-        <div className='flex border-t-2 border-b-2 border-gray-300 py-4' style={{ width: '100%', minHeight: '830px', height: 'auto'}}>
+        <div className='flex border-t-2 border-b-2 border-gray-300 py-4' style={{ width: '100%', minHeight: '850px', height: 'auto'}}>
           {/* left_pnl*/}
           <LeftPnl jsonData={jsonData} />
         </div>

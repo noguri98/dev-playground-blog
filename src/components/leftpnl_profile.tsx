@@ -45,7 +45,7 @@ export default function Profile({ jsonData }: ProfileProps) {
     };
     
     return (
-        <div className="flex flex-col px-4 " style={{ width: '100%', height: 'auto'}}>      
+        <div className="flex flex-col px-4 border-1 border-gray-300 rounded-[20px] px-2" style={{ width: '100%', minHeight: '400px', height: 'auto'}}>      
           <div className="flex justify-center items-center" style={{ width: '100%', height: 'auto'}}>
             <ProfileRender 
                 userInfo={userInfo}
@@ -85,8 +85,8 @@ export default function Profile({ jsonData }: ProfileProps) {
             )}
           </div>
             {/* user info 렌더링*/}
-            <span className="text-left text-xl ml-[3px]"> {jsonData?.user} </span>
-            <span className="text-left text-sm ml-[3px]"> {jsonData?.message} </span>
+            <span className="text-left text-[17px] ml-[3px]"> {jsonData?.user} </span>
+            <span className="text-left text-[13px] ml-[3px]"> {jsonData?.message} </span>
         </div>
     )
 }
