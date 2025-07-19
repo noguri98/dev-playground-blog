@@ -19,8 +19,21 @@ const FileTree: React.FC<FileTreeProps> = ({
 }) => {
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set());
 
-  const getDirIcon = (isOpen: boolean = false): string => {
-    return isOpen ? '📂' : '📁';
+  const getDirIcon = (isOpen: boolean = false): React.ReactNode => {
+    if (isOpen) {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 4H9L11 6H19C20.1046 6 21 6.89543 21 8V9H5V6C5 4.89543 4.10457 4 3 4V4C3 4 3 4 5 4Z" fill="#3B82F6" stroke="#1D4ED8" strokeWidth="1"/>
+          <path d="M3 9H21L19.5 18.5C19.3 19.4 18.5 20 17.6 20H6.4C5.5 20 4.7 19.4 4.5 18.5L3 9Z" fill="#60A5FA" stroke="#1D4ED8" strokeWidth="1"/>
+        </svg>
+      );
+    } else {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 4H4C2.89543 4 2 4.89543 2 6V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V8C22 6.89543 21.1046 6 20 6H12L10 4Z" fill="#94A3B8" stroke="#64748B" strokeWidth="1"/>
+        </svg>
+      );
+    }
   };
 
   const toggleDirectory = (dirName: string) => {
@@ -48,7 +61,6 @@ const FileTree: React.FC<FileTreeProps> = ({
     // 디렉토리 렌더링
     directories.forEach(([dirName, dirContent]) => {
       const isExpanded = expandedDirs.has(dirName);
-      const dirIcon = getDirIcon(isExpanded);
       
       items.push(
         <div key={`dir-${dirName}`} className="mb-1">
@@ -57,11 +69,14 @@ const FileTree: React.FC<FileTreeProps> = ({
             style={{ paddingLeft: `${currentLevel * 1}px` }}
             onClick={() => toggleDirectory(dirName)}
           >
-            <span className="mr-2 text-sm">{dirIcon}</span>
-            <span className="font-semibold text-blue-600 text-sm">{dirName}</span>
-            <span className="ml-2 text-xs text-gray-500">
-              {isExpanded ? '▼' : '▶'}
+            <span 
+              className={`mr-2 text-xs text-gray-500 transition-transform duration-200 ${
+                isExpanded ? 'transform rotate-90' : ''
+              }`}
+            >
+              &gt;
             </span>
+            <span className="font-semibold text-gray-500 text-sm">{dirName}</span>
           </div>
           
           {isExpanded && (
@@ -96,7 +111,11 @@ const FileTree: React.FC<FileTreeProps> = ({
   if (Object.keys(structure).length === 0) {
     return (
       <div className="text-center text-gray-500 py-4">
-        <div className="text-2xl mb-2">📁</div>
+        <div className="text-2xl mb-2">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 4H4C2.89543 4 2 4.89543 2 6V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V8C22 6.89543 21.1046 6 20 6H12L10 4Z" fill="#F1F5F9" stroke="#CBD5E1" strokeWidth="1.5" strokeDasharray="4 4"/>
+          </svg>
+        </div>
         <p className="text-sm">폴더가 비어있습니다</p>
       </div>
     );
@@ -232,7 +251,11 @@ export default function FileList() {
         {Object.keys(filteredStructure).length === 0 ? (
           <div className="text-center text-gray-500 py-8">
             <div className="text-2xl mb-2">
-              {searchQuery ? '🔍' : '📁'}
+              {searchQuery ? '🔍' : (
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 4H4C2.89543 4 2 4.89543 2 6V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V8C22 6.89543 21.1046 6 20 6H12L10 4Z" fill="#F1F5F9" stroke="#CBD5E1" strokeWidth="1.5" strokeDasharray="4 4"/>
+                </svg>
+              )}
             </div>
             <p className="text-sm">
               {searchQuery ? '검색 결과가 없습니다' : '파일이 없습니다'}
