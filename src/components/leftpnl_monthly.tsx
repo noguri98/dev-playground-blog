@@ -45,7 +45,7 @@ export default function Monthly() {
     const emptyDays = Array.from({ length: firstDayOfWeek }, (_, i) => i);
 
     return (
-        <div className='flex p-0.5 border-1 border-gray-300 rounded-[20px] px-2 ' style={{ width: '100%', height: '200px'}}>
+        <div className='flex p-2 border-1 border-gray-300 rounded-[20px] px-2 ' style={{ width: '100%', height: '200px'}}>
             <div className="w-full h-full flex flex-col">
                 {/* 헤더 - 월 표시 및 네비게이션 */}
                 <div className="flex justify-between items-center mb-0.5 px-1 py-0.5">
